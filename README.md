@@ -1,10 +1,10 @@
-# Amuns
+# Amun
 
 This is a program that aims high performance stubbing through configuration
 
-## Install and configure GO
+## Install and configure Go
 
-### Download GO
+### Download Go
 
 ```bash
 curl -sLO https://dl.google.com/go/go1.11.5.linux-amd64.tar.gz ; \
@@ -12,7 +12,7 @@ curl -sLO https://dl.google.com/go/go1.11.5.linux-amd64.tar.gz ; \
     tar -C /usr/local -xzf go1.11.5.linux-amd64.tar.gz
 ```
 
-### GOROOT => location of GO install
+### Go location
 
 ```bash
 export GOROOT=/usr/local/go
@@ -21,8 +21,6 @@ export PATH=$HOME/bin:/usr/local/bin:$GOPATH/go/bin:$GOROOT/bin:$PATH
 ```
 
 ## Build and Run It
-
-in src directory under $GOPATH, execute:
 
 ### Locally
 
