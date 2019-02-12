@@ -1,0 +1,20 @@
+---
+responses:
+  - path: /test/123
+    headers:
+      X-test: val2
+    query:
+      action: test
+    contentType: application/json
+    template: |-
+      {
+        "widget": {
+          "debug": "on",
+          "window": {
+              "title": "Sample Konfabulator Widget",
+              "name": "main_window",
+              "width": 500,
+              "height": 500
+          }
+        }
+      }
