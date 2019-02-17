@@ -1,9 +1,12 @@
 package main
 
 import (
+	"amun/cfg"
+	"amun/handlers"
 	"flag"
 	"log"
 	"net/http"
+	"time"
 )
 
 var (
@@ -14,27 +17,23 @@ var (
 func main() {
 	flag.Parse()
 
-	y := ReadConfig(*cfgFilePath)
+	y := cfg.ReadConfig(*cfgFilePath)
 
 	mux := http.NewServeMux()
 
 	for _, resp := range y.Responses {
-		mux.HandleFunc(resp.Path, func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", resp.ContentType)
+		mux.HandleFunc(resp.Path, handlers.AmunHandler(&resp))
+	}
 
-			if resp.ContainsHeaders(&r.Header) && resp.ContainsParams(r.URL.Query()) {
-				if _, err := w.Write([]byte(resp.Template)); err != nil {
-					log.Printf("Error while serving response %v", resp.Path)
-				}
-			} else {
-				http.NotFound(w, r)
-			}
-
-		})
+	srv := &http.Server{
+		ReadTimeout:  3 * time.Second,
+		WriteTimeout: 5 * time.Second,
+		Handler:      mux,
+		Addr:         *addr,
 	}
 
 	log.Printf("Starting server listening on port %s", *addr)
-	if err := http.ListenAndServe(*addr, mux); err != nil && err != http.ErrServerClosed {
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Could not listen on %s: %v\n", *addr, err)
 	}
 }

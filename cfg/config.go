@@ -1,4 +1,4 @@
-package main
+package cfg
 
 import (
 	"io/ioutil"
@@ -17,6 +17,7 @@ type Response struct {
 	QueryParams map[string]string `yaml:"query"`
 	ContentType string            `yaml:"contentType"`
 	Template    string            `yaml:"template"`
+	RawTemplate []byte            `yaml:"-"`
 }
 
 // Cfg - yaml file
@@ -37,14 +38,29 @@ func ReadConfig(cfgFilePath string) Cfg {
 	if err != nil {
 		log.Fatalf("yamlFile.Get err   #%v ", err)
 	}
-	err = yaml.Unmarshal(yamlFile, &y)
+
+	if err := yaml.Unmarshal(yamlFile, &y); err != nil {
+		log.Fatalf("yamlFile.Get unmarshal   #%v ", err)
+	}
+
 	log.Printf("yamlFile.struct   #%v ", y)
+
+	y.applyRawTemplate()
 
 	return y
 }
 
-func (response *Response) ContainsHeaders(rHeaders *http.Header) bool {
+func (cfg *Cfg) applyRawTemplate() {
+	for i := range cfg.Responses {
+		cfg.Responses[i].populateRawTemplate()
+	}
+}
 
+func (resp *Response) populateRawTemplate() {
+	resp.RawTemplate = []byte(resp.Template)
+}
+
+func (response *Response) ContainsHeaders(rHeaders *http.Header) bool {
 	for k, v := range response.Headers {
 		if rHeaders.Get(k) != v {
 			return false
@@ -54,7 +70,6 @@ func (response *Response) ContainsHeaders(rHeaders *http.Header) bool {
 }
 
 func (response *Response) ContainsParams(params url.Values) bool {
-
 	for k, v := range response.QueryParams {
 		if params.Get(k) != v {
 			return false
