@@ -52,25 +52,21 @@ func ReadConfig(cfgFilePath string) Cfg {
 
 func (cfg *Cfg) applyRawTemplate() {
 	for i := range cfg.Responses {
-		cfg.Responses[i].populateRawTemplate()
+		cfg.Responses[i].RawTemplate = []byte(cfg.Responses[i].Template)
 	}
 }
 
-func (resp *Response) populateRawTemplate() {
-	resp.RawTemplate = []byte(resp.Template)
-}
-
-func (response *Response) ContainsHeaders(rHeaders *http.Header) bool {
-	for k, v := range response.Headers {
-		if rHeaders.Get(k) != v {
+func (r *Response) ContainsHeaders(rHds *http.Header) bool {
+	for k, v := range r.Headers {
+		if rHds.Get(k) != v {
 			return false
 		}
 	}
 	return true
 }
 
-func (response *Response) ContainsParams(params url.Values) bool {
-	for k, v := range response.QueryParams {
+func (r *Response) ContainsParams(params url.Values) bool {
+	for k, v := range r.QueryParams {
 		if params.Get(k) != v {
 			return false
 		}

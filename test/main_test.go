@@ -9,10 +9,11 @@ import (
 )
 
 func TestStubHandler(t *testing.T) {
-	resp := &cfg.Response{
+	resp := cfg.Response{
 		ContentType: "application/json",
 		Path:        "/hello",
-		RawTemplate: []byte(`{"alive": true}`)}
+		RawTemplate: []byte(`{"alive": true}`),
+	}
 
 	req, err := http.NewRequest("GET", "/hello", nil)
 	if err != nil {
@@ -20,7 +21,7 @@ func TestStubHandler(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(handlers.AmunHandler(resp))
+	handler := http.Handler(handlers.CoreHandler(resp))
 
 	handler.ServeHTTP(rr, req)
 
@@ -29,7 +30,6 @@ func TestStubHandler(t *testing.T) {
 			status, http.StatusOK)
 	}
 
-	// Check the response body is what we expect.
 	expected := `{"alive": true}`
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v",

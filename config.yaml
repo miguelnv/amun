@@ -18,3 +18,22 @@ responses:
           }
         }
       }
+  - path: /test/another
+    headers:
+      X-test: val
+    query:
+      latency: true
+    contentType: application/json
+    template: |-
+      {
+        "widget": {
+          "debug": "on",
+          "window": {
+              "title": "Sample Konfabulator Widget",
+              "name": "main_window",
+              "width": 500,
+              "height": 500,
+              "latency": true
+          }
+        }
+      }

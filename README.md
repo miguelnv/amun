@@ -34,3 +34,23 @@ go run $GOPATH/src/amun -file-path=$GOPATH/src/amun/config.yaml
 docker build -t "amun:0.1" .
 docker run -d -p 9000:9000 --name "amun" amun:0.1
 ```
+
+## Usage
+
+### Matching parameter and header
+
+```bash
+curl http://localhost:9000/test/123?action=test -H "X-test: val2"
+```
+
+### With 200 milliseconds of latency
+
+```bash
+curl http://localhost:9000/test/123?action=test -H "X-test: val2" -H "X-latency: 200ms"
+```
+
+### With 1 second of latency
+
+```bash
+curl http://localhost:9000/test/123?action=test -H "X-test: val2" -H "X-latency: 1s"
+```

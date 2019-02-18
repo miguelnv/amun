@@ -19,16 +19,14 @@ func main() {
 
 	y := cfg.ReadConfig(*cfgFilePath)
 
-	mux := http.NewServeMux()
-
 	for _, resp := range y.Responses {
-		mux.HandleFunc(resp.Path, handlers.AmunHandler(&resp))
+		http.Handle(resp.Path, handlers.CoreHandler(resp))
 	}
 
 	srv := &http.Server{
-		ReadTimeout:  3 * time.Second,
-		WriteTimeout: 5 * time.Second,
-		Handler:      mux,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		Handler:      nil,
 		Addr:         *addr,
 	}
 
