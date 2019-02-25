@@ -26,6 +26,7 @@ export PATH=$HOME/bin:/usr/local/bin:$GOPATH/go/bin:$GOROOT/bin:$PATH
 
 ```bash
 git clone https://github.com/miguelnv/amun.git
+cd amun
 go build
 ./amun -file-path=custom/config.yaml
 ```
