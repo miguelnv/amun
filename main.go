@@ -1,8 +1,8 @@
 package main
 
 import (
-	"amun/cfg"
-	"amun/handlers"
+	"github.com/miguelnv/amun/cfg"
+	"github.com/miguelnv/amun/handlers"
 	"flag"
 	"log"
 	"net/http"

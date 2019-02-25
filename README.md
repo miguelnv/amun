@@ -25,7 +25,9 @@ export PATH=$HOME/bin:/usr/local/bin:$GOPATH/go/bin:$GOROOT/bin:$PATH
 ### Locally
 
 ```bash
-go run $GOPATH/src/amun -file-path=$GOPATH/src/amun/config.yaml
+git clone https://github.com/miguelnv/amun.git
+go build
+./amun -file-path=custom/config.yaml
 ```
 
 ### Dockerized

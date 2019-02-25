@@ -1,8 +1,8 @@
 package test
 
 import (
-	"amun/cfg"
-	"amun/handlers"
+	"github.com/miguelnv/amun/cfg"
+	"github.com/miguelnv/amun/handlers"
 	"net/http"
 	"net/http/httptest"
 	"testing"

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"amun/cfg"
+	"github.com/miguelnv/amun/cfg"
 	"fmt"
 	"log"
 	"net/http"
