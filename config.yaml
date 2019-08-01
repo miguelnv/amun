@@ -1,5 +1,8 @@
 ---
 responses:
+  - path: /ping
+    contentType: text/plain
+    template: pong
   - path: /test/123
     headers:
       X-test: val2

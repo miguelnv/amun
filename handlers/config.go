@@ -1,4 +1,4 @@
-package cfg
+package handlers
 
 import (
 	"io/ioutil"

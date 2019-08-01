@@ -1,5 +1,4 @@
 # STEP 1 build executable binary
-
 FROM golang:alpine as builder
 
 # Install git
@@ -9,18 +8,26 @@ RUN apk update && \
     apk add ca-certificates && \
     adduser -D -g '' amun
 
-COPY . $GOPATH/src/amun/
-WORKDIR $GOPATH/src/amun
+#COPY . $GOPATH/src/amun/
+#WORKDIR $GOPATH/src/amun
+
+WORKDIR /amun
+COPY go.mod go.sum ./
 
 # get dependencies
-RUN go get -d -v
+#RUN go get -d -v
+# Using go mod with go 1.11
+RUN go mod download
+RUN go mod verify
+
+# Copy the source from the current directory to the Working Directory inside the container
+COPY . .
 
 # build the binary
 # removing debug informations and compile only for linux target and disabling cross compilation
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o $GOPATH/bin/amun
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o amun
 
-# build the binary
-# RUN go build -o $GOPATH/bin/amun
+#RUN ls -la
 
 # STEP 2 build a small image
 
@@ -31,10 +38,10 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /etc/passwd /etc/passwd
 
 # expose yaml file
-COPY --from=builder /go/src/amun/config.yaml /config.yaml
+COPY --from=builder /amun/config.yaml /
 # Copy our static executable
-COPY --from=builder /go/bin/amun /go/bin/amun
+COPY --from=builder /amun/amun /
 
 USER amun
 EXPOSE 9000
-ENTRYPOINT ["/go/bin/amun"]
+ENTRYPOINT ["/amun"]
