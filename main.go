@@ -17,14 +17,18 @@ var (
 func main() {
 	flag.Parse()
 
-	y := handlers.ReadConfig(*cfgFilePath)
+	cfg := handlers.ReadConfig(*cfgFilePath)
 
-	for _, resp := range y.Responses {
-		http.Handle(resp.Path, http.HandlerFunc(resp.ConfigHandler))
+	log.Println("mappings from configuration file loaded with success")
+
+	for _, mapping := range cfg.Mappings {
+		http.Handle(mapping.Path, http.HandlerFunc(mapping.ConfigHandler))
 	}
 
-	// generate post handler to dinamycally create routes
-	// http.Handle("/add")
+	// generate handler to dinamycally create add/edit/remove/get mappings
+	http.Handle("/mappings", http.HandlerFunc(handlers.AddMappingHandler))
+
+	log.Println("mappings endpoint loaded")
 
 	srv := &http.Server{
 		ReadTimeout:  5 * time.Second,
@@ -33,8 +37,10 @@ func main() {
 		Addr:         *addr,
 	}
 
-	log.Printf("Starting server listening on port %s", *addr)
+	log.Printf("Server listening on port %s", *addr)
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Could not listen on %s: %v\n", *addr, err)
+	} else if err != nil {
+		log.Fatalf("Could not start server on %s: %v\n", *addr, err)
 	}
 }

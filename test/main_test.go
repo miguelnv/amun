@@ -9,10 +9,10 @@ import (
 )
 
 func TestSuccessStubHandler(t *testing.T) {
-	resp := handlers.Response{
+	resp := handlers.Mapping{
 		ContentType: "application/json",
 		Path:        "/hello",
-		RawTemplate: []byte(`{"alive": true}`),
+		Template:    `{"alive": true}`,
 	}
 
 	req, err := http.NewRequest("GET", "/hello", nil)
@@ -38,10 +38,10 @@ func TestSuccessStubHandler(t *testing.T) {
 }
 
 func TestTimerStubHandler(t *testing.T) {
-	resp := handlers.Response{
+	resp := handlers.Mapping{
 		ContentType: "application/json",
 		Path:        "/hello",
-		RawTemplate: []byte(`{"alive": true}`),
+		Template:    `{"alive": true}`,
 	}
 
 	req, err := http.NewRequest("GET", "/unknown", nil)

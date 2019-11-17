@@ -41,7 +41,13 @@ curl http://localhost:9000/test/123?action=test -H "X-test: val2" -H "X-Amun-Lat
 ### With 1 second of latency
 
 ```bash
-curl http://localhost:9000/test/123?action=test -H "X-test: val2" -H "X-latency: 1s"
+curl http://localhost:9000/test/123?action=test -H "X-test: val2" -H "X-Amun-latency: 1s"
+```
+
+### Add mapping
+
+```bash
+curl -v -X POST -d '{"path": "/hello","contentType": "text/plain","template": "world"}' localhost:9000/mappings
 ```
 
 ## Profiling it

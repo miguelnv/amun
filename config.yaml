@@ -1,5 +1,5 @@
 ---
-responses:
+mappings:
   - path: /ping
     contentType: text/plain
     template: pong

@@ -1,15 +1,11 @@
 # STEP 1 build executable binary
-FROM golang:alpine as builder
+FROM golang:1.13.4-alpine3.10 as builder
 
 # Install git
 # RUN apk update && apk add git
 RUN apk update && \
-    apk add git && \
-    apk add ca-certificates && \
+    apk add --no-cache git ca-certificates && \
     adduser -D -g '' amun
-
-#COPY . $GOPATH/src/amun/
-#WORKDIR $GOPATH/src/amun
 
 WORKDIR /amun
 COPY go.mod go.sum ./

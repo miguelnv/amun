@@ -10,24 +10,22 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// Response - responses
-type Response struct {
+// Mapping - mapping
+type Mapping struct {
 	Path        string
 	Headers     map[string]string `yaml:"headers"`
 	QueryParams map[string]string `yaml:"query"`
 	ContentType string            `yaml:"contentType"`
 	Template    string            `yaml:"template"`
-	RawTemplate []byte            `yaml:"-"`
 }
 
 // Cfg - yaml file
 type Cfg struct {
-	Responses []Response
+	Mappings []Mapping
 }
 
 // ReadConfig read configuration file
 func ReadConfig(cfgFilePath string) Cfg {
-	y := Cfg{}
 
 	filename, err := filepath.Abs(cfgFilePath)
 	if err != nil {
@@ -39,24 +37,17 @@ func ReadConfig(cfgFilePath string) Cfg {
 		log.Fatalf("yamlFile.Get err   #%v ", err)
 	}
 
-	if err := yaml.Unmarshal(yamlFile, &y); err != nil {
+	cfg := Cfg{}
+	if err := yaml.Unmarshal(yamlFile, &cfg); err != nil {
 		log.Fatalf("yamlFile.Get unmarshal   #%v ", err)
 	}
 
-	log.Printf("yamlFile.struct   #%v ", y)
+	log.Printf("yamlFile.struct   #%v ", cfg)
 
-	y.applyRawTemplate()
-
-	return y
+	return cfg
 }
 
-func (cfg *Cfg) applyRawTemplate() {
-	for i := range cfg.Responses {
-		cfg.Responses[i].RawTemplate = []byte(cfg.Responses[i].Template)
-	}
-}
-
-func (r *Response) ContainsHeaders(rHds *http.Header) bool {
+func (r *Mapping) MatchHeaders(rHds *http.Header) bool {
 	for k, v := range r.Headers {
 		if rHds.Get(k) != v {
 			return false
@@ -65,7 +56,7 @@ func (r *Response) ContainsHeaders(rHds *http.Header) bool {
 	return true
 }
 
-func (r *Response) ContainsParams(params url.Values) bool {
+func (r *Mapping) MatchParams(params url.Values) bool {
 	for k, v := range r.QueryParams {
 		if params.Get(k) != v {
 			return false
